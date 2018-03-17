@@ -16,8 +16,8 @@ legalizer.legalize = function(req, res) {
 
   if (result) {
     var response = {
-      result: result
-    }
+      result
+    };
     res.send(response);
   } else {
     res.send({
