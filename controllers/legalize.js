@@ -7,14 +7,12 @@ legalizer.legalize = function(req, res) {
   if (!req.body.state) {
     res.status(400);
     res.send({
-      status: 'error',
-      error: 'No Bills or Tickets sent to legalize.'
+      status: "error",
+      error: "No Bills or Tickets sent to legalize."
     });
   }
 
-  console.log(req.body.state);
-
-  var result = {text: 'Hola Mundo!!'};
+  var result = {text: "Hola Mundo!!"};
 
   if (result) {
     var response = {
@@ -23,8 +21,8 @@ legalizer.legalize = function(req, res) {
     res.send(response);
   } else {
     res.send({
-      status: 'error',
-      error: 'Error occured while Legalizing documents.'
+      status: "error",
+      error: "Error occured while Legalizing documents."
     });
   }
 };
@@ -33,14 +31,12 @@ legalizer.test = function(req, res) {
     if (!req.body.state) {
         res.status(400);
         res.send({
-          status: 'error',
-          error: 'No Bills or Tickets sent to legalize.'
+          status: "error",
+          error: "No Bills or Tickets sent to legalize."
         });
       }
     
-      console.log(req.body.state);
-    
-      var result = {text: 'Servicio respondiendo!!'};
+      var result = {text: "Servicio respondiendo!!"};
     
       if (result) {
         var response = {
@@ -49,8 +45,8 @@ legalizer.test = function(req, res) {
         res.send(response);
       } else {
         res.send({
-          status: 'error',
-          error: 'Error occured while Legalizing documents.'
+          status: "error",
+          error: "Error occured while Legalizing documents."
         });
       } 
 };
