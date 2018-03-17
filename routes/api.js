@@ -1,9 +1,10 @@
-var solver = require('../controllers/solver');
+var legalizer = require('../controllers/legalize');
 
 var routesAPI = function(app) {
   
   //solver routes
-  app.post('/solver/solve', solver.solve);
+  app.post('/legalize', legalizer.legalize);
+  app.get('/legalize', legalizer.test);
 }
 
 
