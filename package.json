@@ -17,6 +17,7 @@
     "body-parser": "^1.15.1",
     "crypto-js": "git+https://github.com/brix/crypto-js.git",
     "express": "^4.13.4",
+    "javascript-lp-solver": "^0.4.5",
     "morgan": "^1.7.0",
     "q": "^1.4.1",
     "reflect-metadata": "^0.1.8",

@@ -1,4 +1,3 @@
-
 var helpers = {};
 
 helpers.test = function() {
