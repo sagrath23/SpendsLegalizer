@@ -1,30 +1,4 @@
 /*
- *  Authors:
- *    Christian Schulte <schulte@gecode.org>
- *
- *  Copyright:
- *    Christian Schulte, 2008-2018
- *
- *  Permission is hereby granted, free of charge, to any person obtaining
- *  a copy of this software, to deal in the software without restriction,
- *  including without limitation the rights to use, copy, modify, merge,
- *  publish, distribute, sublicense, and/or sell copies of the software,
- *  and to permit persons to whom the software is furnished to do so, subject
- *  to the following conditions:
- *
- *  The above copyright notice and this permission notice shall be
- *  included in all copies or substantial portions of the software.
- *
- *  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- *  EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- *  MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- *  NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
- *  LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
- *  OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
- *  WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- *
- */
-
 #include <gecode/int.hh>
 #include <gecode/gist.hh>
 
@@ -48,7 +22,7 @@ public:
   “bonos”: [3, 6, 2],
   “facturas”: [5, 1, 7, 3]
 }
-*/
+
     IntArgs c(7); IntVarArgs x(7);
     c[0]=3; c[1]=6; c[2]=2; 
     x[0]=s; x[1]=e; x[2]=n; 
@@ -74,5 +48,75 @@ int main(int argc, char* argv[]) {
   SPLegalizer* m = new SPLegalizer;
   Gist::dfs(m);
   delete m;
+  return 0;
+}
+*/
+
+#include <gecode/int.hh>
+#include <gecode/search.hh>
+
+using namespace Gecode;
+
+class SPLegalizer : public Space {
+protected:
+  IntVarArray l;
+/* 
+{
+  “bonos”: [3, 6, 2],
+  “facturas”: [5, 1, 7, 3]
+}*/
+public:
+  SPLegalizer(void) : l(*this, 7, 0, 1) {
+    IntVar s(l[0]), e(l[1]), n(l[2]), 
+           d(l[3]), m(l[4]), o(l[5]), r(l[6]);
+
+
+    IntArgs c(7); IntVarArgs x(7);
+    c[0]=3; c[1]=6; c[2]=2; 
+    x[0]=s; x[1]=e; x[2]=n; 
+    
+    c[3]=-5; c[4]=-1; c[5]=-7; c[6]=-3;
+    x[3]=d;  x[4]=m;  x[5]=o;  x[6]=r;
+    
+    linear(*this, c, x, IRT_EQ, 0);
+    branch(*this, l, INT_VAR_SIZE_MIN(), INT_VAL_MIN());
+  }
+
+  SPLegalizer(SPLegalizer& s) : Space(s) {
+    l.update(*this, s.l);
+  }
+  virtual Space* copy(void) {
+    return new SPLegalizer(*this);
+  }
+  void print(void) const {
+    std::cout << l << std::endl;
+  }
+  // constrain function
+  virtual void constrain(const Space& _b) {
+    const SPLegalizer& b = static_cast<const SPLegalizer&>(_b);
+    IntVar s(l[0]), e(l[1]), n(l[2]), 
+           d(l[3]), m(l[4]), o(l[5]), r(l[6]);
+    IntVar b_s(b.l[0]), b_e(b.l[1]), b_n(b.l[2]), 
+           b_d(b.l[3]), b_m(b.l[4]), b_o(b.l[5]), b_r(b.l[6]);
+
+    int money = (b_s.val() + b_e.val() + b_n.val() +
+                 b_d.val() + b_m.val() + b_o.val() + b_r.val());
+
+    IntArgs c(7); IntVarArgs x(7);
+
+    c[0]=1; c[1]=1; c[2]=1; c[3]=1; c[4]=1; c[5]=1; c[6]=1;
+    x[0]=s; x[1]=e; x[2]=n; x[3]=d; x[4]=m; x[5]=o; x[6]=r;
+    linear(*this, c, x, IRT_GR, money);
+  }
+};
+
+// main function
+int main(int argc, char* argv[]) {
+  SPLegalizer* m = new SPLegalizer;
+  BAB<SPLegalizer> e(m);
+  delete m;
+  while (SPLegalizer* s = e.next()) {
+    s->print(); delete s;
+  }
   return 0;
 }
