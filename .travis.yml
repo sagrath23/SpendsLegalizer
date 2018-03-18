@@ -15,7 +15,7 @@ before_install:
 install:
     - yarn install
 script:
-    - yarn install codecov -g
+    - npm install codecov -g
     - yarn test-with-coverage
 after_success:
     - codecov
