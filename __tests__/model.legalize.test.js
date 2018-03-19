@@ -1,6 +1,9 @@
 //TODO: mock exec
 
 const legalizeDocuments = require("../models/legalize");
+const childProcess = require("child_process");
+
+jest.mock('childProcess');
 
 test("Sum of bills is greater than sum of tickets", function(done){ 
     const basicInput = {
