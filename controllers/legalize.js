@@ -28,28 +28,7 @@ legalizer.legalize = function(req, res) {
 };
 
 legalizer.test = function(req, res) {
-    legalize.legalize({},{})
-    if (!req.body.state) {
-        res.status(400);
-        res.send({
-          status: "error",
-          error: "No Bills or Tickets sent to legalize."
-        });
-      }
-    
-      var result = {text: "Servicio respondiendo!!"};
-    
-      if (result) {
-        var response = {
-          result: result
-        }
-        res.send(response);
-      } else {
-        res.send({
-          status: "error",
-          error: "Error occured while Legalizing documents."
-        });
-      } 
+  res.send('Hi, i am ok.');
 };
 
 module.exports = legalizer;
