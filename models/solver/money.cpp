@@ -9,22 +9,12 @@ class SPLegalizer : public Space {
 protected:
   IntVarArray l;
   int definedVariables;
-/* 
-{
-  “bonos”:    [3, 6, 2],
-  “facturas”: [5, 1, 7, 3]
-}*/
+
 public:
-  SPLegalizer(void) : l(*this, 7, 0, 1) {
+  SPLegalizer(int countTickets, int countBills, int ticketsValues[] , int billsValues[] ) : l(*this, countTickets + countBills, 0, 1) {
 
-    this->definedVariables = 7;
+    this->definedVariables = countTickets + countBills;
     
-    int countTickets = 3;
-    int countBills = 4;
-
-    int ticketsValues [countTickets] = { 3, 6, 2 }; 
-    int billsValues [countBills] = {5, 1, 7, 3};
-
     IntVar variables [this->definedVariables] = {};
 
     for (int i = 0; i < this->definedVariables; i++) {
@@ -77,7 +67,7 @@ public:
 
   // constrain function
   virtual void constrain(const Space& _spaceBranch) {
-    /*
+  /*
     const SPLegalizer& branch = static_cast<const SPLegalizer&>(_spaceBranch);
 
     IntVar variables [this->definedVariables] = {};
@@ -116,7 +106,7 @@ public:
     x[0]=s; x[1]=e; x[2]=n; x[3]=d; x[4]=m; x[5]=o; x[6]=r;
 
     linear(*this, c, x, IRT_GR, money);
-    */
+  */
     const SPLegalizer& branch = static_cast<const SPLegalizer&>(_spaceBranch);
 
     //TODO: delete this
@@ -141,17 +131,43 @@ public:
 
 // main function
 int main(int argc, char* argv[]) {
-  SPLegalizer* m = new SPLegalizer;
 
-  Gist::Print<SPLegalizer> p("Print solution");
-  Gist::Options o;
-  o.inspect.click(&p);
-  Gist::bab(m,o);
+  if (argc < 3) {
+    std::cerr << "Syntax : ./money --mode < 0 => console, 1 => GIST> --tickets <countOfTickets> --ticketList <list_of_tickets> --bills <countOfTickets> --billList <list_of_bills>" << std::endl;
+    return 0;
+  }
 
-  // BAB<SPLegalizer> e(m);
-  delete m;
-  /* while (SPLegalizer* s = e.next()) {
-    s->print(); delete s;
-  } */
+  int ticketsValues [atoi(argv[4])] = { 3, 6, 2 }; 
+  int billsValues [atoi(argv[8])] = {5, 1, 7, 3};
+
+  SPLegalizer* m = new SPLegalizer(atoi(argv[4]), atoi(argv[8]), ticketsValues, billsValues);
+
+  std::cout << argv[4] << std::endl; //count tickets
+  std::cout << argv[6] << std::endl; //list tickets
+  std::cout << argv[8] << std::endl; //count bills
+  std::cout << argv[10] << std::endl; //list bills
+  switch(atoi(argv[2])) {
+    case 1: {// GIST
+      Gist::Print<SPLegalizer> p("Print solution");
+      Gist::Options o;
+      o.inspect.click(&p);
+      Gist::bab(m,o);
+      delete m;
+    } break;
+    case 0: { // CONSOLE
+      BAB<SPLegalizer> e(m);
+      delete m;
+      while (SPLegalizer* s = e.next()) {
+        s->print(); delete s;
+      } 
+    } break;
+    default: {
+      BAB<SPLegalizer> e(m);
+      delete m;
+      while (SPLegalizer* s = e.next()) {
+        s->print(); delete s;
+      } 
+    }
+  }
   return 0;
 }
