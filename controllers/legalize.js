@@ -28,7 +28,7 @@ legalizer.legalize = function(req, res) {
 };
 
 legalizer.test = function(req, res) {
-  res.send('Hi, i am ok.');
+  res.send('Hi, i am online & ready to start to legalize your spends.');
 };
 
 module.exports = legalizer;

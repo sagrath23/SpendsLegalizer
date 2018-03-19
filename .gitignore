@@ -5,3 +5,4 @@ bower_packages
 typings
 models/solver/money
 models/solver/money.o
+.serverless/spend-legalizer.zip
