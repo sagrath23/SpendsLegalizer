@@ -29,6 +29,7 @@ legalizer.legalize = function(req, res) {
 
 legalizer.test = function(req, res) {
   res.status(200);
+  legalize({},{});
   res.send({
     status: "Ok"
   });

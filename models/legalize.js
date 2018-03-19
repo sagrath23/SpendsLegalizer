@@ -1,31 +1,22 @@
-var solver = require("javascript-lp-solver");
+var childProcess = require('child_process');
+
 
 function legalize(tickets, bills) {
-    var results,
-        model = {
-            "optimize": "capacity",
-            "opType": "max",
-            "constraints": {
-                "plane": {"max": 44},
-                "person": {"max": 512},
-                "cost": {"max": 300000}
-            },
-            "variables": {
-                "brit": {
-                    "capacity": 20000,
-                    "plane": 1,
-                    "person": 8,
-                    "cost": 5000
-                },
-                "yank": {
-                    "capacity": 30000,
-                    "plane": 1,
-                    "person": 16,
-                    "cost": 9000
-                }
-            },
-        };
-
-    results = solver.Solve(model);
-    console.log(results);
+    var solverCommand = './models/solver/money --mode 0 --tickets 3 --ticketsList 3,6,2 --bills 4 --billList 5,1,7,3';
+    if(childProcess) {
+        childProcess.exec(solverCommand, (err, stdout, stderr) => {
+            if (err) {
+              console.warn(`command couldn't be executed`);
+              return;
+            }
+          
+            // the *entire* stdout and stderr (buffered)
+            console.log(`stdout: ${stdout}`);
+            console.log(`stderr: ${stderr}`);
+          });
+    } else {
+        console.log('fuck');
+    }
 }
+
+module.exports = legalize;
