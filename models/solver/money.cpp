@@ -1,122 +1,164 @@
-/*
-#include <gecode/int.hh>
-#include <gecode/gist.hh>
-
-// steps to compile
-// add to path: export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
-// compile: g++ -std=gnu++11 -I/usr/local/include -c money.cpp 
-// link: g++ -o money -L/usr/local/lib money.o -lgecodesearch -lgecodeint -lgecodekernel -lgecodesupport -lgecodegist
-
-
-using namespace Gecode;
-
-class SPLegalizer : public Space {
-protected:
-  IntVarArray l;
-public:
-  SPLegalizer(void) : l(*this, 7, 0, 1) {
-    IntVar s(l[0]), e(l[1]), n(l[2]), 
-           d(l[3]), m(l[4]), o(l[5]), r(l[6]);
-/* 
-{
-  “bonos”: [3, 6, 2],
-  “facturas”: [5, 1, 7, 3]
-}
-
-    IntArgs c(7); IntVarArgs x(7);
-    c[0]=3; c[1]=6; c[2]=2; 
-    x[0]=s; x[1]=e; x[2]=n; 
-    
-    c[3]=-5; c[4]=-1; c[5]=-7; c[6]=-3;
-    x[3]=d;  x[4]=m;  x[5]=o;  x[6]=r;
-    
-    linear(*this, c, x, IRT_EQ, 0);
-    branch(*this, l, INT_VAR_SIZE_MIN(), INT_VAL_MIN());
-  }
-  SPLegalizer(SPLegalizer& s) : Space(s) {
-    l.update(*this, s.l);
-  }
-  virtual Space* copy(void) {
-    return new SPLegalizer(*this);
-  }
-  void print(void) const {
-    std::cout << l << std::endl;
-  }
-};
-
-int main(int argc, char* argv[]) {
-  SPLegalizer* m = new SPLegalizer;
-  Gist::dfs(m);
-  delete m;
-  return 0;
-}
-*/
-
+#include <gecode/driver.hh>
 #include <gecode/int.hh>
 #include <gecode/search.hh>
+#include <gecode/gist.hh>
 
 using namespace Gecode;
 
 class SPLegalizer : public Space {
 protected:
   IntVarArray l;
-/* 
-{
-  “bonos”: [3, 6, 2],
-  “facturas”: [5, 1, 7, 3]
-}*/
+  int definedVariables;
+  IntVar defVar;
+
 public:
-  SPLegalizer(void) : l(*this, 7, 0, 1) {
-    IntVar s(l[0]), e(l[1]), n(l[2]), 
-           d(l[3]), m(l[4]), o(l[5]), r(l[6]);
+  //default constructor
+  SPLegalizer(int countTickets, int countBills, int ticketsValues[] , int billsValues[] ) : l(*this, countTickets + countBills, 0, 1), defVar(*this, countTickets + countBills, countTickets + countBills) {
 
+    this->definedVariables = defVar.val();
 
-    IntArgs c(7); IntVarArgs x(7);
-    c[0]=3; c[1]=6; c[2]=2; 
-    x[0]=s; x[1]=e; x[2]=n; 
+    IntVar variables [this->definedVariables] = {};
+
+    for (int i = 0; i < this->definedVariables; i++) {
+      IntVar var(l[i]);
+      variables[i] =  var;
+    }
+
+    IntArgs c(this->definedVariables); 
+    IntArgs v(this->definedVariables); 
+    IntVarArgs x(this->definedVariables);
+
+    //setup tickets expressions
+    for (int i = 0; i < countTickets; i++) {
+      c[i] = ticketsValues[i];
+      x[i] = variables[i];
+      v[i] = 1;
+    }
+
+    //setup bills expressions
+    for (int i = 0; i < countBills; i++) {
+      c[countTickets + i] = -1 * billsValues[i];
+      x[countTickets + i] = variables[countTickets + i];
+      v[countTickets + i] = 1;
+    }
     
-    c[3]=-5; c[4]=-1; c[5]=-7; c[6]=-3;
-    x[3]=d;  x[4]=m;  x[5]=o;  x[6]=r;
-    
-    linear(*this, c, x, IRT_EQ, 0);
+    //the sum of tickets & bills must be greater or equal than zero
+    linear(*this, c, x, IRT_GQ, 0);
+    //must be legalized at least one bill & one ticket
+    linear(*this, v, x, IRT_GQ, 2);
+
     branch(*this, l, INT_VAR_SIZE_MIN(), INT_VAL_MIN());
   }
 
+  // Copy Constructor
   SPLegalizer(SPLegalizer& s) : Space(s) {
     l.update(*this, s.l);
+    defVar.update(*this, s.defVar);
   }
+
   virtual Space* copy(void) {
     return new SPLegalizer(*this);
   }
+
   void print(void) const {
     std::cout << l << std::endl;
   }
+
+  void print(std::ostream& os) const {
+    os << l << std::endl;
+  }
+
   // constrain function
-  virtual void constrain(const Space& _b) {
-    const SPLegalizer& b = static_cast<const SPLegalizer&>(_b);
-    IntVar s(l[0]), e(l[1]), n(l[2]), 
-           d(l[3]), m(l[4]), o(l[5]), r(l[6]);
-    IntVar b_s(b.l[0]), b_e(b.l[1]), b_n(b.l[2]), 
-           b_d(b.l[3]), b_m(b.l[4]), b_o(b.l[5]), b_r(b.l[6]);
+  virtual void constrain(const Space& _spaceBranch) {
+    const SPLegalizer& branch = static_cast<const SPLegalizer&>(_spaceBranch);
 
-    int money = (b_s.val() + b_e.val() + b_n.val() +
-                 b_d.val() + b_m.val() + b_o.val() + b_r.val());
+    int countVariables = branch.defVar.val();
 
-    IntArgs c(7); IntVarArgs x(7);
+    IntVar variables [countVariables] = {};
+    IntVar branchVariables [countVariables] = {};
 
-    c[0]=1; c[1]=1; c[2]=1; c[3]=1; c[4]=1; c[5]=1; c[6]=1;
-    x[0]=s; x[1]=e; x[2]=n; x[3]=d; x[4]=m; x[5]=o; x[6]=r;
-    linear(*this, c, x, IRT_GR, money);
+    //setup variables & branch variables
+    for (int i = 0; i < countVariables; i++) {
+      IntVar var(l[i]);
+      IntVar branch_var(branch.l[i]);
+      variables[i] =  var;
+      branchVariables[i] = branch_var;
+    }
+
+    int legalizedDocuments = 0;
+
+    for (int i = 0; i < countVariables; i++) {
+      int value = branchVariables[i].val();
+      legalizedDocuments = legalizedDocuments + branchVariables[i].val();
+    }
+
+    IntArgs c(countVariables); IntVarArgs x(countVariables);
+
+    for (int i = 0; i < countVariables; i++) {
+      c[i] = 1;
+      x[i] = variables[i];
+    }
+
+    linear(*this, c, x, IRT_GR, legalizedDocuments);
   }
 };
 
 // main function
 int main(int argc, char* argv[]) {
-  SPLegalizer* m = new SPLegalizer;
-  BAB<SPLegalizer> e(m);
-  delete m;
-  while (SPLegalizer* s = e.next()) {
-    s->print(); delete s;
+
+  if (argc < 11) {
+    std::cerr << "Syntax : ./money --mode < 0 => console, 1 => GIST> --tickets <countOfTickets> --ticketList <list_of_tickets> --bills <countOfTickets> --billList <list_of_bills>" << std::endl;
+    return 0;
+  }
+  int countTickets = atoi(argv[4]);
+  int countBills = atoi(argv[8]);
+
+  int ticketsValues [countTickets] = {}; //{ 3, 6, 2 }; 
+  int billsValues [countBills] = {};//{5, 1, 7, 3};
+  char* pch;
+
+  //parsing tickets
+  pch = strtok (argv[6]," ,.-");
+  int i = 0;
+  while (pch != NULL) {
+    ticketsValues[i] = atoi(pch);
+    i++;
+    pch = strtok (NULL, " ,.-");
+  }
+
+  //parsing bills
+  pch = strtok (argv[10]," ,.-");
+  i = 0;
+  while (pch != NULL) {
+    billsValues[i] = atoi(pch);
+    i++;
+    pch = strtok (NULL, " ,.-");
+  }
+
+  SPLegalizer* m = new SPLegalizer(countTickets, countBills, ticketsValues, billsValues);
+
+  switch(atoi(argv[2])) {
+    case 1: {// GIST
+      Gist::Print<SPLegalizer> p("Print solution");
+      Gist::Options o;
+      o.inspect.click(&p);
+      Gist::bab(m,o);
+      delete m;
+    } break;
+    case 0: { // CONSOLE
+      BAB<SPLegalizer> e(m);
+      delete m;
+      while (SPLegalizer* s = e.next()) {
+        s->print(); delete s;
+      } 
+    } break;
+    default: {
+      BAB<SPLegalizer> e(m);
+      delete m;
+      while (SPLegalizer* s = e.next()) {
+        s->print(); delete s;
+      } 
+    }
   }
   return 0;
 }
