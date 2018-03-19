@@ -106,7 +106,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/spend-legalizer/dev/1521473843093-2018-03-19T15:37:23.093Z/spend-legalizer.zip"
+                "S3Key": "serverless/spend-legalizer/dev/1521492017194-2018-03-19T20:40:17.194Z/spend-legalizer.zip"
               },
               "FunctionName": "spend-legalizer-dev-app",
               "Handler": "index.handler",
@@ -125,14 +125,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "AppLambdaVersionag6RTgXfVDgk4sn3xenH8L0clRjito7ZtEEBGheFec": {
+          "AppLambdaVersionotFi4bOvKXkvR8skP1hweRPH72TyoSFJ9vGEBGYccsw": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "Th7Yo8CaK2olSdaifpj5Ix6FUhGiRXkzbLabJklLe4A="
+              "CodeSha256": "YNMmWu8166oKFTBD2bqHEaRGQdVnJBF5mWBdghxuJyc="
             }
           },
           "ApiGatewayRestApi": {
@@ -242,7 +242,7 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1521473843251": {
+          "ApiGatewayDeployment1521492017353": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -298,7 +298,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionag6RTgXfVDgk4sn3xenH8L0clRjito7ZtEEBGheFec"
+              "Ref": "AppLambdaVersionotFi4bOvKXkvR8skP1hweRPH72TyoSFJ9vGEBGYccsw"
             }
           },
           "ServiceEndpoint": {
@@ -355,7 +355,7 @@
     "artifact": "/media/steven/Files/videoplayer/.serverless/spend-legalizer.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/spend-legalizer/dev/1521473843093-2018-03-19T15:37:23.093Z",
+    "artifactDirectoryName": "serverless/spend-legalizer/dev/1521492017194-2018-03-19T20:40:17.194Z",
     "artifact": "spend-legalizer.zip"
   }
 }
