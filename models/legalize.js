@@ -1,22 +1,29 @@
-var childProcess = require('child_process');
+const childProcess = require('child_process');
 
+const legalizeDocuments = (tickets, bills) => {
+    //TODO: promisify this
+    return new Promise((resolve, reject) => {
+        const  solverCommand = `./models/solver/money --mode 0 --tickets ${tickets.length} --ticketsList ${tickets.join(",")} --bills ${bills.length} --billList ${bills.join(",")}`;
+        if(childProcess) {
+            childProcess.exec(solverCommand, (err, stdout, stderr) => {
+                if (err) {
+                console.warn(`command couldn't be executed`);
+                return;
+                }
+            
+                // the *entire* stdout and stderr (buffered)
+                const allResults = stdout.split("{");
+                const optimalResult = allResults[allResults.length - 1].split("}")[0];
+                
+                const values = optimalResult.split(",");
+                resolve(values);
+            });
+        } else {
+            console.warn(`childProcess library not found.`);
+            reject();
+        }
+    });
+       
+};
 
-function legalize(tickets, bills) {
-    var solverCommand = './models/solver/money --mode 0 --tickets 3 --ticketsList 3,6,2 --bills 4 --billList 5,1,7,3';
-    if(childProcess) {
-        childProcess.exec(solverCommand, (err, stdout, stderr) => {
-            if (err) {
-              console.warn(`command couldn't be executed`);
-              return;
-            }
-          
-            // the *entire* stdout and stderr (buffered)
-            console.log(`stdout: ${stdout}`);
-            console.log(`stderr: ${stderr}`);
-          });
-    } else {
-        console.log('fuck');
-    }
-}
-
-module.exports = legalize;
+module.exports = legalizeDocuments;
