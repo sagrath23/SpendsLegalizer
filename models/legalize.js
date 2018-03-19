@@ -1,4 +1,4 @@
-const childProcess = require('child_process');
+const childProcess = require("child_process");
 
 const legalizeDocuments = (tickets, bills) => {
     //TODO: promisify this

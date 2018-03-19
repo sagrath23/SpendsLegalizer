@@ -40,13 +40,15 @@ legalizer.test = function(req, res) {
     };
 
     tickets.map((item, index) => {
-      if (parseInt(result[index]) === 1){
+      const value = parseInt(result[index]);
+      if (value === 1){
         objectResult.bonos.push(item);
       }
     });
 
     bills.map((item, index) => {
-      if(parseInt(result[index + tickets.length]) === 1) {
+      const value = parseInt(result[index + tickets.length]);
+      if(value === 1) {
         objectResult.facturas.push(item);
       }
     });
