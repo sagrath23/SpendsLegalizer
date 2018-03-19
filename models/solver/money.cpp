@@ -93,7 +93,6 @@ public:
     int legalizedDocuments = 0;
 
     for (int i = 0; i < countVariables; i++) {
-      int value = branchVariables[i].val();
       legalizedDocuments = legalizedDocuments + branchVariables[i].val();
     }
 
