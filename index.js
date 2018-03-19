@@ -1,4 +1,5 @@
 //requiring NPM modeles
+var serverless = require('serverless-http');
 var express = require("express");
 var path = require("path");
 var morgan = require("morgan");
@@ -37,3 +38,5 @@ app.use("/",express.static("client"));
 app.listen(configs.applicationPort, function () {
   console.log("Example app listening on port "+configs.applicationPort+"!");
 });
+
+module.exports.handler = serverless(app)
