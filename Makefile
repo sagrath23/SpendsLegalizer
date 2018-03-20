@@ -5,6 +5,8 @@ CC = g++
 #  -Wall turns on most, but not all, compiler warnings
 STDFLAG = -std=gnu++11
 INCLUDEFLAG = -I/usr/local/include
+LIBPATH = -L/usr/local/lib
+LIBDEP = -lgecodesearch -lgecodeint -lgecodekernel -lgecodesupport -lgecodegist
 CFLAGS  = -g -Wall -pthread -lpthread
 
 # the build target executable:
@@ -14,3 +16,6 @@ clean:
 	$(RM) server
 compile:
 	$(CC) $(STDFLAG) $(INCLUDEFLAG) -c $(TARGET)money.cpp
+build: 
+	$(CC) -o money $(LIBPATH) $(TARGET)money.o $(LIBDEP)
+	g++ -o money -L/usr/local/lib money.o -lgecodesearch -lgecodeint -lgecodekernel -lgecodesupport -lgecodegist
