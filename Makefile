@@ -13,7 +13,7 @@ CFLAGS  = -g -Wall -pthread -lpthread
 
 # the build target executable:
 TARGET = models/solver/
-HEROKUTARGET = /app/models/solver/
+
 clean:
 	$(RM) client
 	$(RM) server
@@ -25,5 +25,5 @@ all-local:
 	$(CC) $(STDFLAG) $(INCLUDEFLAG) -c $(TARGET)money.cpp -o $(TARGET)money.o
 	$(CC) -o $(TARGET)money $(LIBPATH) $(TARGET)money.o $(LIBDEP)
 all-heroku:
-	$(CC) $(STDFLAG) $(HEROKUINCLF) -c $(HEROKUTARGET)money.cpp -o $(TARGET)money.o
-	$(CC) -o $(HEROKUTARGET)money $(LIBPATH) $(HEROKUTARGET)money.o $(LIBDEP)
+	$(CC) $(STDFLAG) $(HEROKUINCLF) -c $(TARGET)money.cpp -o $(TARGET)money.o
+	$(CC) -o $(TARGET)money $(LIBPATH) $(TARGET)money.o $(LIBDEP)
