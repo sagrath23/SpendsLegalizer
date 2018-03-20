@@ -13,7 +13,7 @@ CFLAGS  = -g -Wall -pthread -lpthread
 
 # the build target executable:
 TARGET = models/solver/
-HEROKUTARGET = /app/models/solver
+HEROKUTARGET = /app/models/solver/
 clean:
 	$(RM) client
 	$(RM) server
