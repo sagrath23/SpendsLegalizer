@@ -1,4 +1,7 @@
+const exec = require("child_process").exec;
 const legalizeDocuments = require("../models/legalize");
+
+jest.mock("exec");
 
 var nockExec = require('nock-exec');
 
@@ -9,8 +12,9 @@ test("Sum of bills is greater than sum of tickets", function(done){
     };
 
     const command = `./models/solver/money --mode 0 --tickets ${basicInput.bonos.length} --ticketsList ${basicInput.bonos.join(",")} --bills ${basicInput.facturas.length} --billList ${basicInput.facturas.join(",")}`;
-    nockExec(command).out('').outputLine('').err('some error').reply(0, '{1, 1, 1, 0, 1, 1, 1}');
+    nockExec(command).out('{1, 1, 1, 0, 1, 1, 1}');
     
+    console.log(nockExec(command).out('{1, 1, 1, 0, 1, 1, 1}'));
     const expectedOutput = ["1", " 1", " 1", " 0", " 1", " 1", " 1"];
 
     const promise = legalizeDocuments(basicInput.bonos, basicInput.facturas);
@@ -53,7 +57,7 @@ test("Sum of tickets are greater than sum of bills", function(done){
     };
     
     const command = `./models/solver/money --mode 0 --tickets ${basicInput.bonos.length} --ticketsList ${basicInput.bonos.join(",")} --bills ${basicInput.facturas.length} --billList ${basicInput.facturas.join(",")}`;
-    nockExec(command).out('').outputLine('').err('some error').reply(0, '{1, 1, 1, 1, 1, 1, 1, 1}');
+    nockExec(command).out('{1, 1, 1, 1, 1, 1, 1, 1}');
 
     const expectedOutput = ["1", " 1", " 1", " 1", " 1", " 1", " 1", " 1"];
 
