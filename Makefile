@@ -5,9 +5,9 @@ CC = g++
 #  -Wall turns on most, but not all, compiler warnings
 STDFLAG = -std=gnu++11
 INCLUDEFLAG = -I/usr/local/include
-HEROKUINCLF = -Igecode/gecode
+HEROKUINCLF = -Igecode-release-6.0.0/gecode
 LIBPATH = -L/usr/local/lib
-HEROKULIBPATH = -Lgecode
+HEROKULIBPATH = -Lgecode-release-6.0.0
 LIBDEP = -lgecodesearch -lgecodeint -lgecodekernel -lgecodesupport -lgecodegist
 CFLAGS  = -g -Wall -pthread -lpthread
 
