@@ -1,10 +1,10 @@
-const childProcess = require("child_process");
+const exec = require("child_process").exec;
 
 const legalizeDocuments = (tickets, bills) => {
     //TODO: promisify this
     return new Promise((resolve, reject) => {
-        if(childProcess) {
-            childProcess.exec(
+        if(exec) {
+            exec(
                 `./models/solver/money --mode 0 --tickets ${tickets.length} --ticketsList ${tickets.join(",")} --bills ${bills.length} --billList ${bills.join(",")}`, 
                 (err, stdout, stderr) => {
                     if (err) {

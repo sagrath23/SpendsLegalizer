@@ -42,6 +42,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "lite-server": "^2.2.2",
     "lodash": "^4.16.4",
+    "nock-exec": "^0.1.0",
     "protractor": "~4.0.14",
     "rimraf": "^2.5.4",
     "webdriver-manager": "10.2.5"
