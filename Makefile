@@ -3,18 +3,14 @@ CC = g++
 # compiler flags:
 #  -g    adds debugging information to the executable file
 #  -Wall turns on most, but not all, compiler warnings
+STDFLAG = -std=gnu++11
+INCLUDEFLAG = -I/usr/local/include
 CFLAGS  = -g -Wall -pthread -lpthread
+
 # the build target executable:
-TARGET = src/
-all: $(TARGET)
-		$(CC) $(CFLAGS) -o client $(TARGET)client.cpp
-		$(CC) $(CFLAGS) -o server $(TARGET)bignumber/bignumber.cpp $(TARGET)server.cpp
-server: $(TARGET)
-		$(CC) $(CFLAGS) -o server $(TARGET)bignumber/bignumber.cpp $(TARGET)server/server.cpp
-client: $(TARGET)
-		$(CC) $(CFLAGS) -o client $(TARGET)client.cpp
-number: $(TARGET)
-		$(CC) $(CFLAGS) $(TARGET)bignumber/bignumber.cpp 
+TARGET = models/solver/
 clean:
 	$(RM) client
 	$(RM) server
+compile:
+	$(CC) $(STDFLAG) $(INCLUDEFLAG) -c $(TARGET)money.cpp
