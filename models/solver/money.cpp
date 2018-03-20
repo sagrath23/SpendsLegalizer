@@ -5,6 +5,11 @@
 
 using namespace Gecode;
 
+// steps to compile
+// add to path: export LD_LIBRARY_PATH=/lib:/usr/lib:/usr/local/lib
+// compile: g++ -std=gnu++11 -I/usr/local/include -c money.cpp 
+// link: g++ -o money -L/usr/local/lib money.o -lgecodesearch -lgecodeint -lgecodekernel -lgecodesupport -lgecodegist
+
 class SPLegalizer : public Space {
 protected:
   IntVarArray l;
@@ -88,7 +93,6 @@ public:
     int legalizedDocuments = 0;
 
     for (int i = 0; i < countVariables; i++) {
-      int value = branchVariables[i].val();
       legalizedDocuments = legalizedDocuments + branchVariables[i].val();
     }
 

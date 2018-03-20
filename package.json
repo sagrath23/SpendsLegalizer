@@ -7,7 +7,7 @@
     "serve": "node index.js",
     "serve:e2e": "lite-server -c=bs-config.e2e.json",
     "start": "concurrently \"npm run serve\"",
-    "test": "jest",
+    "test": "jest --watchAll",
     "coverage": "jest --coverage --coverageReporters=lcov",
     "test-with-coverage": "yarn coverage && cat ./coverage/lcov.info | codacy-coverage --accountToken 7Fe1Hm9mMSJeuaS3V1NZ --username sagrath23 --projectName SpendsLegalizer"
   },
@@ -43,6 +43,7 @@
     "karma-jasmine-html-reporter": "^0.2.2",
     "lite-server": "^2.2.2",
     "lodash": "^4.16.4",
+    "nock-exec": "^0.1.0",
     "protractor": "~4.0.14",
     "rimraf": "^2.5.4",
     "webdriver-manager": "10.2.5"
@@ -50,6 +51,11 @@
   "jest": {
     "testRegex": "__tests__/.*\\.(test|spec)\\.(js|jsx)$",
     "testEnvironment": "node",
+    "moduleDirectories": [
+      "node_modules",
+      "bower_components",
+      "shared"
+    ],
     "moduleFileExtensions": [
       "ts",
       "tsx",

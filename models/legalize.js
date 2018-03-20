@@ -1,31 +1,29 @@
-var solver = require("javascript-lp-solver");
+const exec = require("child_process").exec;
 
-function legalize(tickets, bills) {
-    var results,
-        model = {
-            "optimize": "capacity",
-            "opType": "max",
-            "constraints": {
-                "plane": {"max": 44},
-                "person": {"max": 512},
-                "cost": {"max": 300000}
-            },
-            "variables": {
-                "brit": {
-                    "capacity": 20000,
-                    "plane": 1,
-                    "person": 8,
-                    "cost": 5000
-                },
-                "yank": {
-                    "capacity": 30000,
-                    "plane": 1,
-                    "person": 16,
-                    "cost": 9000
-                }
-            },
-        };
+const legalizeDocuments = (tickets, bills) => {
+    //TODO: promisify this
+    return new Promise((resolve, reject) => {
+        if(exec) {
+            exec(
+                `./models/solver/money --mode 0 --tickets ${tickets.length} --ticketsList ${tickets.join(",")} --bills ${bills.length} --billList ${bills.join(",")}`, 
+                (err, stdout, stderr) => {
+                    if (err) {
+                        reject();
+                        return;
+                    }
+                
+                    // the *entire* stdout and stderr (buffered)
+                    const allResults = stdout.split("{");
+                    const optimalResult = allResults[allResults.length - 1].split("}")[0];
+                    
+                    const values = optimalResult.split(",");
+                    resolve(values);
+                });
+        } else {
+            reject();
+        }
+    });
+       
+};
 
-    results = solver.Solve(model);
-    console.log(results);
-}
+module.exports = legalizeDocuments;

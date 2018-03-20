@@ -1,5 +1,5 @@
 // var solverModel = require('../models/solver');
-var legalize = require("../models/legalize");
+var legalizeDocuments = require("../models/legalize");
 var legalizer = {};
 // controller that handles request to solve a rubik cube
 legalizer.legalize = function(req, res) {
@@ -29,8 +29,34 @@ legalizer.legalize = function(req, res) {
 
 legalizer.test = function(req, res) {
   res.status(200);
-  res.send({
-    status: "Ok"
+  const tickets = [3,6,2];
+  const bills = [5,1,7,3];
+  const promise = legalizeDocuments(tickets, bills);
+
+  promise.then((result) => {
+    const objectResult = {
+      bonos: [],
+      facturas: []
+    };
+
+    tickets.map((item, index) => {
+      const value = parseInt(result[index]);
+      if (value === 1){
+        objectResult.bonos.push(item);
+      }
+    });
+
+    bills.map((item, index) => {
+      const value = parseInt(result[index + tickets.length]);
+      if(value === 1) {
+        objectResult.facturas.push(item);
+      }
+    });
+
+    res.send({
+      status: "Ok",
+      result: objectResult
+    });
   });
 };
 
