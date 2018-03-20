@@ -4,3 +4,4 @@ coverage
 bower_packages
 typings
 models/solver/money.o
+models/solver/money
