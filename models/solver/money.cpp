@@ -1,7 +1,13 @@
+/* 
 #include <gecode/driver.hh>
 #include <gecode/int.hh>
 #include <gecode/search.hh>
 #include <gecode/gist.hh>
+*/
+#include "gecode-release-6.0.0/gecode/driver.hh"
+#include "gecode-release-6.0.0/gecode/int.hh"
+#include "gecode-release-6.0.0/gecode/search.hh"
+#include "gecode-release-6.0.0/gecode/gist.hh"
 
 using namespace Gecode;
 
