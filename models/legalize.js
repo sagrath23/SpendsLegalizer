@@ -40,36 +40,49 @@ const greedyLegalizeDocuments = (tickets, bills) => {
 
     var legalizedBills = [];
     var legalizedTickets = [];
+    var sumTickets = tickets.reduce((acm, actual) => {
+        return acm + actual;
+    });
+    var sumBills = bills.reduce((acm, actual) => {
+        return acm + actual;
+    });
 
-    for(var ticketIndex=0; ticketIndex < tickets.length; ticketIndex++) {
-        diff += tickets[ticketIndex]
-        while(billIndex <= bills.length -1 && diff > 0 && diff >= bills[billIndex]) {
-            if(diff - bills[billIndex + 1] >= 0){
-                //check minimum between diff - bills[billIndex + 1] & diff - bills[billIndex]
-                if(diff - bills[billIndex + 1] < diff - bills[billIndex]){
-                    //legalize bills[billIndex + 1]
-                    legalizedBills.push(bills[billIndex + 1]);
-                    //update diff
-                    diff -= bills[billIndex+1];
-                    // and move billIndex
-                    billIndex++;
+    if(sumBills <= tickets[0]) {
+        return {
+            bonos: [tickets[0]],
+            facturas: bills
+        };
+    } else {
+        for(var ticketIndex=0; ticketIndex < tickets.length; ticketIndex++) {
+            diff += tickets[ticketIndex];
+            while(billIndex <= bills.length -1 && diff > 0 && diff >= bills[billIndex]) {
+                if(diff - bills[billIndex + 1] >= 0){
+                    //check minimum between diff - bills[billIndex + 1] & diff - bills[billIndex]
+                    if(diff - bills[billIndex + 1] < diff - bills[billIndex]){
+                        //legalize bills[billIndex + 1]
+                        legalizedBills.push(bills[billIndex + 1]);
+                        //update diff
+                        diff -= bills[billIndex+1];
+                        // and move billIndex
+                        billIndex++;
+                    } else {
+                        //legalize bills[billIndex]
+                        legalizedBills.push(bills[billIndex]);
+                        //update diff
+                        diff -= bills[billIndex];
+                    }
                 } else {
-                    //legalize bills[billIndex]
+                    //diff - bills[billIndex + 1] is greather than diff, so, legalize bill[billIndex]
                     legalizedBills.push(bills[billIndex]);
                     //update diff
                     diff -= bills[billIndex];
                 }
-            } else {
-                //diff - bills[billIndex + 1] is greather than diff, so, legalize bill[billIndex]
-                legalizedBills.push(bills[billIndex]);
-                //update diff
-                diff -= bills[billIndex];
+                //and move to the next bill
+                billIndex++;
             }
-            //and move to the next bill
-            billIndex++;
+            // legalize ticket
+            legalizedTickets.push(tickets[ticketIndex]);
         }
-        // legalize ticket
-        legalizedTickets.push(tickets[ticketIndex]);
     }
 
     return {

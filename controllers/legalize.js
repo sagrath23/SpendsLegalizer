@@ -10,14 +10,14 @@ legalizer.legalize = function(req, res) {
     status =  {
       status: "error",
       error: "No Bills or Tickets sent to legalize."
-    }
+    };
   } else {
     const objectResult = greedyLegalizeDocuments(req.body.bonos, req.body.facturas);
 
     status = {
       status: "Ok",
       result: objectResult
-    }
+    };
   }
 
   res.send(status);
