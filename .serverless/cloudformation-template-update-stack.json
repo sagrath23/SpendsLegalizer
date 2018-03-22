@@ -92,7 +92,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/spend-legalizer/dev/1521685640158-2018-03-22T02:27:20.158Z/spend-legalizer.zip"
+          "S3Key": "serverless/spend-legalizer/dev/1521687227413-2018-03-22T02:53:47.413Z/spend-legalizer.zip"
         },
         "FunctionName": "spend-legalizer-dev-app",
         "Handler": "index.handler",
@@ -111,14 +111,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionEaxiLXerLSyaGuj0JwXtiYgntoPYC32VGrWOZcgyY": {
+    "AppLambdaVersionoSfgAY4B0fbAmtu68aLGjlbMrVCvLfLLjEFlUeBPc": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "aB0AK/1CrT8+ET+buqsDaRlMRiDHlDuRnrXODsljCSw="
+        "CodeSha256": "G4syTvapJPtbxWZkaO/a/9KnOcGBEInFEVlxUqS3ZT0="
       }
     },
     "ApiGatewayRestApi": {
@@ -271,7 +271,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1521685640595": {
+    "ApiGatewayDeployment1521687227796": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -327,7 +327,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionEaxiLXerLSyaGuj0JwXtiYgntoPYC32VGrWOZcgyY"
+        "Ref": "AppLambdaVersionoSfgAY4B0fbAmtu68aLGjlbMrVCvLfLLjEFlUeBPc"
       }
     },
     "ServiceEndpoint": {
