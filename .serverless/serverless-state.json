@@ -106,7 +106,7 @@
                 "S3Bucket": {
                   "Ref": "ServerlessDeploymentBucket"
                 },
-                "S3Key": "serverless/spend-legalizer/dev/1521513768336-2018-03-20T02:42:48.336Z/spend-legalizer.zip"
+                "S3Key": "serverless/spend-legalizer/dev/1521687227413-2018-03-22T02:53:47.413Z/spend-legalizer.zip"
               },
               "FunctionName": "spend-legalizer-dev-app",
               "Handler": "index.handler",
@@ -125,14 +125,14 @@
               "IamRoleLambdaExecution"
             ]
           },
-          "AppLambdaVersionwikriH7951jxbj7jpAtf8sCxFJwvcSCkYc1IR2QirU": {
+          "AppLambdaVersionoSfgAY4B0fbAmtu68aLGjlbMrVCvLfLLjEFlUeBPc": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "GNetqdul2McgM2D+hoRHW4LeIr7wYlwT7oyIwSyMJVI="
+              "CodeSha256": "G4syTvapJPtbxWZkaO/a/9KnOcGBEInFEVlxUqS3ZT0="
             }
           },
           "ApiGatewayRestApi": {
@@ -146,7 +146,7 @@
               }
             }
           },
-          "ApiGatewayResourceProxyVar": {
+          "ApiGatewayResourceLegalize": {
             "Type": "AWS::ApiGateway::Resource",
             "Properties": {
               "ParentId": {
@@ -155,61 +155,65 @@
                   "RootResourceId"
                 ]
               },
-              "PathPart": "{proxy+}",
+              "PathPart": "legalize",
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
               }
             }
           },
-          "ApiGatewayMethodAny": {
+          "ApiGatewayMethodLegalizeOptions": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "ANY",
+              "AuthorizationType": "NONE",
+              "HttpMethod": "OPTIONS",
+              "MethodResponses": [
+                {
+                  "StatusCode": "200",
+                  "ResponseParameters": {
+                    "method.response.header.Access-Control-Allow-Origin": true,
+                    "method.response.header.Access-Control-Allow-Headers": true,
+                    "method.response.header.Access-Control-Allow-Methods": true,
+                    "method.response.header.Access-Control-Allow-Credentials": true
+                  },
+                  "ResponseModels": {}
+                }
+              ],
               "RequestParameters": {},
-              "ResourceId": {
-                "Fn::GetAtt": [
-                  "ApiGatewayRestApi",
-                  "RootResourceId"
+              "Integration": {
+                "Type": "MOCK",
+                "RequestTemplates": {
+                  "application/json": "{statusCode:200}"
+                },
+                "IntegrationResponses": [
+                  {
+                    "StatusCode": "200",
+                    "ResponseParameters": {
+                      "method.response.header.Access-Control-Allow-Origin": "'*'",
+                      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                      "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                      "method.response.header.Access-Control-Allow-Credentials": "'false'"
+                    },
+                    "ResponseTemplates": {
+                      "application/json": ""
+                    }
+                  }
                 ]
               },
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceLegalize"
+              },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
-              },
-              "ApiKeyRequired": false,
-              "AuthorizationType": "NONE",
-              "Integration": {
-                "IntegrationHttpMethod": "POST",
-                "Type": "AWS_PROXY",
-                "Uri": {
-                  "Fn::Join": [
-                    "",
-                    [
-                      "arn:aws:apigateway:",
-                      {
-                        "Ref": "AWS::Region"
-                      },
-                      ":lambda:path/2015-03-31/functions/",
-                      {
-                        "Fn::GetAtt": [
-                          "AppLambdaFunction",
-                          "Arn"
-                        ]
-                      },
-                      "/invocations"
-                    ]
-                  ]
-                }
-              },
-              "MethodResponses": []
+              }
             }
           },
-          "ApiGatewayMethodProxyVarAny": {
+          "ApiGatewayMethodLegalizePost": {
             "Type": "AWS::ApiGateway::Method",
             "Properties": {
-              "HttpMethod": "ANY",
+              "HttpMethod": "POST",
               "RequestParameters": {},
               "ResourceId": {
-                "Ref": "ApiGatewayResourceProxyVar"
+                "Ref": "ApiGatewayResourceLegalize"
               },
               "RestApiId": {
                 "Ref": "ApiGatewayRestApi"
@@ -242,7 +246,46 @@
               "MethodResponses": []
             }
           },
-          "ApiGatewayDeployment1521513768763": {
+          "ApiGatewayMethodLegalizeGet": {
+            "Type": "AWS::ApiGateway::Method",
+            "Properties": {
+              "HttpMethod": "GET",
+              "RequestParameters": {},
+              "ResourceId": {
+                "Ref": "ApiGatewayResourceLegalize"
+              },
+              "RestApiId": {
+                "Ref": "ApiGatewayRestApi"
+              },
+              "ApiKeyRequired": false,
+              "AuthorizationType": "NONE",
+              "Integration": {
+                "IntegrationHttpMethod": "POST",
+                "Type": "AWS_PROXY",
+                "Uri": {
+                  "Fn::Join": [
+                    "",
+                    [
+                      "arn:aws:apigateway:",
+                      {
+                        "Ref": "AWS::Region"
+                      },
+                      ":lambda:path/2015-03-31/functions/",
+                      {
+                        "Fn::GetAtt": [
+                          "AppLambdaFunction",
+                          "Arn"
+                        ]
+                      },
+                      "/invocations"
+                    ]
+                  ]
+                }
+              },
+              "MethodResponses": []
+            }
+          },
+          "ApiGatewayDeployment1521687227796": {
             "Type": "AWS::ApiGateway::Deployment",
             "Properties": {
               "RestApiId": {
@@ -251,8 +294,8 @@
               "StageName": "dev"
             },
             "DependsOn": [
-              "ApiGatewayMethodAny",
-              "ApiGatewayMethodProxyVarAny"
+              "ApiGatewayMethodLegalizePost",
+              "ApiGatewayMethodLegalizeGet"
             ]
           },
           "AppLambdaPermissionApiGateway": {
@@ -298,7 +341,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionwikriH7951jxbj7jpAtf8sCxFJwvcSCkYc1IR2QirU"
+              "Ref": "AppLambdaVersionoSfgAY4B0fbAmtu68aLGjlbMrVCvLfLLjEFlUeBPc"
             }
           },
           "ServiceEndpoint": {
@@ -341,10 +384,56 @@
         "handler": "index.handler",
         "events": [
           {
-            "http": "ANY /"
+            "http": {
+              "path": "legalize",
+              "method": "post",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "POST"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
           },
           {
-            "http": "ANY {proxy+}"
+            "http": {
+              "path": "legalize",
+              "method": "get",
+              "cors": {
+                "origins": [
+                  "*"
+                ],
+                "origin": "*",
+                "methods": [
+                  "OPTIONS",
+                  "GET"
+                ],
+                "headers": [
+                  "Content-Type",
+                  "X-Amz-Date",
+                  "Authorization",
+                  "X-Api-Key",
+                  "X-Amz-Security-Token",
+                  "X-Amz-User-Agent"
+                ],
+                "allowCredentials": false
+              },
+              "integration": "AWS_PROXY"
+            }
           }
         ],
         "name": "spend-legalizer-dev-app",
@@ -355,7 +444,7 @@
     "artifact": "/home/steven/Desktop/SpendsLegalizer/.serverless/spend-legalizer.zip"
   },
   "package": {
-    "artifactDirectoryName": "serverless/spend-legalizer/dev/1521513768336-2018-03-20T02:42:48.336Z",
+    "artifactDirectoryName": "serverless/spend-legalizer/dev/1521687227413-2018-03-22T02:53:47.413Z",
     "artifact": "spend-legalizer.zip"
   }
 }
