@@ -1,6 +1,6 @@
 const exec = require("child_process").exec;
 
-const legalizeDocuments = (tickets, bills) => {
+const legalizeDocuments = function (tickets, bills) {
     return new Promise((resolve, reject) => {
         if(exec) {
             exec(
@@ -25,14 +25,14 @@ const legalizeDocuments = (tickets, bills) => {
        
 };
 
-const greedyLegalizeDocuments = (tickets, bills) => {
+const greedyLegalizeDocuments = function (tickets, bills) {
     // order arrays
     tickets.sort((a, b) =>{
-        return a - b
+        return a - b;
     });
     
     bills.sort((a, b) =>{
-        return a - b
+        return a - b;
     });
     
     var diff = 0;

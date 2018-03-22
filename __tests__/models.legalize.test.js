@@ -10,7 +10,7 @@ test("base test case", () => {
     }
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});
 
 test("tickets and bills are equals", () => {
     var tickets = [3,6,2];
@@ -22,7 +22,7 @@ test("tickets and bills are equals", () => {
     }
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});
 
 test("sum of tickets is greater than sum of bills", () => {
     var tickets = [3,6,2];
@@ -34,7 +34,7 @@ test("sum of tickets is greater than sum of bills", () => {
     }
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});
 
 test("sum of tickets only allow to legalize lower bill", () => {
     var tickets = [3,6,2];
@@ -46,7 +46,7 @@ test("sum of tickets only allow to legalize lower bill", () => {
     }
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});
 /*
 test("sum of bills will be legalized by lower ticket", () => {
     var tickets = [11,8,6];
@@ -58,7 +58,7 @@ test("sum of bills will be legalized by lower ticket", () => {
     }
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});
 */
 test("sum of tickets is lower to any bill", () => {
     var tickets = [3,6,2];
@@ -70,7 +70,7 @@ test("sum of tickets is lower to any bill", () => {
     }
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});
 
 test("1k of tickets & bills random", () => {
     var tickets = [157,993,567,986,450,804,524,398,865,472
@@ -97,4 +97,4 @@ test("1k of tickets & bills random", () => {
     var expectedValue = {"bonos": [1, 17, 20, 51, 55, 56, 96, 113, 120, 123, 128, 156, 157, 171, 202, 214,221, 225, 236, 245, 247, 284, 301, 321, 325, 344, 352, 376, 377, 391, 392, 398, 404, 431, 450, 472, 477, 484, 495, 498, 500, 511, 516, 517, 524, 536, 543, 549, 558, 563, 567, 578, 580, 585, 586, 592, 600, 604, 620, 631, 635, 654, 660, 704, 706, 713, 718, 722, 729, 750, 752, 768, 774, 785, 787, 798, 804, 808, 810, 836, 850, 865, 867, 870, 871, 878, 905, 915, 918, 919, 922, 923, 941, 953, 954, 958, 959, 975, 986, 993], "facturas": [15, 33, 49, 60, 78, 89, 98, 100, 130, 154, 164, 174, 185, 190, 205, 221, 252, 254, 283, 306, 316, 322, 335, 348, 366, 381, 400, 414, 466, 496, 544, 556, 599, 621, 645, 656, 694, 708, 710, 731, 762, 778, 783, 785, 785, 806, 819, 857, 865, 878, 915, 950, 995]}
 
     expect(greedyLegalizeDocuments(tickets, bills)).toEqual(expectedValue);
-})
+});

@@ -1,5 +1,5 @@
 //requiring NPM modeles
-var serverless = require('serverless-http');
+var serverless = require("serverless-http");
 var express = require("express");
 var path = require("path");
 var morgan = require("morgan");

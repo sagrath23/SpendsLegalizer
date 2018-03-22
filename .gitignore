@@ -9,3 +9,5 @@ models/solver/money.o
 
 #serverless
 .serverless/*
+#Elastic Beanstalk
+.elasticbeanstalk
