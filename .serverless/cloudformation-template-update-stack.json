@@ -92,7 +92,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/spend-legalizer/dev/1521513768336-2018-03-20T02:42:48.336Z/spend-legalizer.zip"
+          "S3Key": "serverless/spend-legalizer/dev/1521685640158-2018-03-22T02:27:20.158Z/spend-legalizer.zip"
         },
         "FunctionName": "spend-legalizer-dev-app",
         "Handler": "index.handler",
@@ -111,14 +111,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionwikriH7951jxbj7jpAtf8sCxFJwvcSCkYc1IR2QirU": {
+    "AppLambdaVersionEaxiLXerLSyaGuj0JwXtiYgntoPYC32VGrWOZcgyY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "GNetqdul2McgM2D+hoRHW4LeIr7wYlwT7oyIwSyMJVI="
+        "CodeSha256": "aB0AK/1CrT8+ET+buqsDaRlMRiDHlDuRnrXODsljCSw="
       }
     },
     "ApiGatewayRestApi": {
@@ -132,7 +132,7 @@
         }
       }
     },
-    "ApiGatewayResourceProxyVar": {
+    "ApiGatewayResourceLegalize": {
       "Type": "AWS::ApiGateway::Resource",
       "Properties": {
         "ParentId": {
@@ -141,61 +141,65 @@
             "RootResourceId"
           ]
         },
-        "PathPart": "{proxy+}",
+        "PathPart": "legalize",
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
         }
       }
     },
-    "ApiGatewayMethodAny": {
+    "ApiGatewayMethodLegalizeOptions": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "HttpMethod": "ANY",
+        "AuthorizationType": "NONE",
+        "HttpMethod": "OPTIONS",
+        "MethodResponses": [
+          {
+            "StatusCode": "200",
+            "ResponseParameters": {
+              "method.response.header.Access-Control-Allow-Origin": true,
+              "method.response.header.Access-Control-Allow-Headers": true,
+              "method.response.header.Access-Control-Allow-Methods": true,
+              "method.response.header.Access-Control-Allow-Credentials": true
+            },
+            "ResponseModels": {}
+          }
+        ],
         "RequestParameters": {},
-        "ResourceId": {
-          "Fn::GetAtt": [
-            "ApiGatewayRestApi",
-            "RootResourceId"
+        "Integration": {
+          "Type": "MOCK",
+          "RequestTemplates": {
+            "application/json": "{statusCode:200}"
+          },
+          "IntegrationResponses": [
+            {
+              "StatusCode": "200",
+              "ResponseParameters": {
+                "method.response.header.Access-Control-Allow-Origin": "'*'",
+                "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,GET,POST'",
+                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+              },
+              "ResponseTemplates": {
+                "application/json": ""
+              }
+            }
           ]
         },
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceLegalize"
+        },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
-        },
-        "ApiKeyRequired": false,
-        "AuthorizationType": "NONE",
-        "Integration": {
-          "IntegrationHttpMethod": "POST",
-          "Type": "AWS_PROXY",
-          "Uri": {
-            "Fn::Join": [
-              "",
-              [
-                "arn:aws:apigateway:",
-                {
-                  "Ref": "AWS::Region"
-                },
-                ":lambda:path/2015-03-31/functions/",
-                {
-                  "Fn::GetAtt": [
-                    "AppLambdaFunction",
-                    "Arn"
-                  ]
-                },
-                "/invocations"
-              ]
-            ]
-          }
-        },
-        "MethodResponses": []
+        }
       }
     },
-    "ApiGatewayMethodProxyVarAny": {
+    "ApiGatewayMethodLegalizePost": {
       "Type": "AWS::ApiGateway::Method",
       "Properties": {
-        "HttpMethod": "ANY",
+        "HttpMethod": "POST",
         "RequestParameters": {},
         "ResourceId": {
-          "Ref": "ApiGatewayResourceProxyVar"
+          "Ref": "ApiGatewayResourceLegalize"
         },
         "RestApiId": {
           "Ref": "ApiGatewayRestApi"
@@ -228,7 +232,46 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1521513768763": {
+    "ApiGatewayMethodLegalizeGet": {
+      "Type": "AWS::ApiGateway::Method",
+      "Properties": {
+        "HttpMethod": "GET",
+        "RequestParameters": {},
+        "ResourceId": {
+          "Ref": "ApiGatewayResourceLegalize"
+        },
+        "RestApiId": {
+          "Ref": "ApiGatewayRestApi"
+        },
+        "ApiKeyRequired": false,
+        "AuthorizationType": "NONE",
+        "Integration": {
+          "IntegrationHttpMethod": "POST",
+          "Type": "AWS_PROXY",
+          "Uri": {
+            "Fn::Join": [
+              "",
+              [
+                "arn:aws:apigateway:",
+                {
+                  "Ref": "AWS::Region"
+                },
+                ":lambda:path/2015-03-31/functions/",
+                {
+                  "Fn::GetAtt": [
+                    "AppLambdaFunction",
+                    "Arn"
+                  ]
+                },
+                "/invocations"
+              ]
+            ]
+          }
+        },
+        "MethodResponses": []
+      }
+    },
+    "ApiGatewayDeployment1521685640595": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -237,8 +280,8 @@
         "StageName": "dev"
       },
       "DependsOn": [
-        "ApiGatewayMethodAny",
-        "ApiGatewayMethodProxyVarAny"
+        "ApiGatewayMethodLegalizePost",
+        "ApiGatewayMethodLegalizeGet"
       ]
     },
     "AppLambdaPermissionApiGateway": {
@@ -284,7 +327,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionwikriH7951jxbj7jpAtf8sCxFJwvcSCkYc1IR2QirU"
+        "Ref": "AppLambdaVersionEaxiLXerLSyaGuj0JwXtiYgntoPYC32VGrWOZcgyY"
       }
     },
     "ServiceEndpoint": {

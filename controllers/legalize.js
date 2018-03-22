@@ -10,19 +10,12 @@ legalizer.legalize = function(req, res) {
       status: "error",
       error: "No Bills or Tickets sent to legalize."
     });
-  }
-
-  var result = {text: "Hola Mundo!!"};
-
-  if (result) {
-    var response = {
-      result
-    };
-    res.send(response);
   } else {
+    const objectResult = greedyLegalizeDocuments(req.body.tickets, req.body.bills);
+
     res.send({
-      status: "error",
-      error: "Error occured while Legalizing documents." 
+      status: "Ok",
+      result: objectResult
     });
   }
 };
