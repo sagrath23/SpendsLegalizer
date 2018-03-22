@@ -3,5 +3,9 @@ coverage
 .vscode
 bower_packages
 typings
-models/solver/money.o
 models/solver/money
+models/solver/money.o
+.serverless/spend-legalizer.zip
+
+#serverless
+.serverless/*
